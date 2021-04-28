@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     int x = 0, y = 0; // 보드판에서 좌표
     private boolean answer = false; // 정답 체크
     private boolean click = false; // shuffle버튼 눌렀는지 체크
+    int cnt = 0; // 자기보다 큰 인덱스가 더 작은 자리에 위치해 있는 개수
 
     int width;  // 화면 가로 크기 구하기
 
@@ -133,16 +135,43 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 click = true; // shuffle을 눌렀음을 표시
                 answer = false;
-
+                cnt = 0;
+                int length = num * num ;
+                int lastNum = length - 1;
+                
                 PuzzleAdapter adapter = new PuzzleAdapter(getApplicationContext(), selectImage, num, puzzlePiece);
-                Collections.shuffle(Arrays.asList(adapter.newPuzzlePiece));
+
+                while(true) {
+                    cnt = 0;
+                    Collections.shuffle(Arrays.asList(adapter.newPuzzlePiece));
+                    // shuffle 눌렀을 때의 퍼즐 순서 저장
+                    for(int i = 0; i < length; i++) {
+                        shufflePiece[i] = new PuzzlePiece(adapter.newPuzzlePiece[i].getImagePiece(), adapter.newPuzzlePiece[i].getIndex());
+                    }
+
+                    // 무질서도 체크
+                    for(int i = 0; i < length; i++) {
+                        // 빈칸은 건너뜀
+                        if(shufflePiece[i].getIndex() == lastNum && num == 3) {
+                            continue;
+                        } else if (shufflePiece[i].getIndex() == lastNum && num == 4) {
+                            cnt += i/num + 1;
+                            continue;
+                        }
+                        for (int j = i + 1; j < length; j++) {
+                            // 현재 자리에 원래 자릿값 보다 작은 수가 뒤에 있고, 그 수가 빈칸의 인덱스(8 or 15)가 아니라면 cnt ++
+                             if(shufflePiece[i].getIndex() > shufflePiece[j].getIndex() && shufflePiece[j].getIndex() != lastNum)
+                                cnt++;
+                        }
+                    }
+
+                    if(cnt % 2 == 0)
+                        break;
+                }
+
+
                 gridView.setAdapter(adapter);
                 gridView.setNumColumns(num);
-
-                // shuffle 눌렀을 때의 퍼즐 순서 저장
-                for(int i = 0; i < adapter.newPuzzlePiece.length; i++) {
-                    shufflePiece[i] = new PuzzlePiece(adapter.newPuzzlePiece[i].getImagePiece(), adapter.newPuzzlePiece[i].getIndex());
-                }
             }
         });
 
