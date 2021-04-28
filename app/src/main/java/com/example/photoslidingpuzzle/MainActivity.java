@@ -130,9 +130,6 @@ public class MainActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(temp) == false) {
             // 권한 요청
             ActivityCompat.requestPermissions(this, temp.trim().split(" "),1);
-        } else {
-            // 모두 허용 상태
-            Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
         }
     }
 
