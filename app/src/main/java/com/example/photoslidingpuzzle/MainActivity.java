@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_FILE = 23;
     private static final int ACCESS_FILE = 43;
 
+    private long backKeyPressedTime = 0;
+
     // 변수
     public int num = 3; // 퍼즐 초기값은 3*3
     protected Bitmap[] oriPuzzlePiece; // 이미지 비트맵 배열
@@ -74,8 +77,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main);
         checkSelfPermission();  // Check Permission
+
+        // Intro 액티비티 종료
+        IntroActivity introActivity = (IntroActivity)IntroActivity.activity;
+        introActivity.finish();
+
 
         // 화면 크기 구하기
         Display display = getWindowManager().getDefaultDisplay();
@@ -231,6 +240,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
+        if (System.currentTimeMillis() > backKeyPressedTime + 2500) {
+            backKeyPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "뒤로 가기 버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간에 2.5초를 더해 현재 시간과 비교 후
+        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간이 2.5초가 지나지 않았으면 종료
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2500) {
+            finish();
+        }
     }
 
     // 이미지 리사이즈
