@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 
 import android.Manifest;
@@ -341,7 +342,6 @@ public class MainActivity extends AppCompatActivity {
                     setImage = true;
                     resizeImage();
                     setImage(3);
-                    Toast.makeText(this, "Select!", Toast.LENGTH_SHORT).show();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -439,18 +439,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showInfo(){
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+//        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+//
+//        alertBuilder.setTitle("** 게임 설명 **");
+//        alertBuilder.setMessage("이미지를 클릭하면 원하는 이미지로 바꿀 수 있습니다.\n\nSTART 버튼을 클릭하면 게임을 시작할 수 있습니다. ");
+//        alertBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//            }
+//        });
+//
+//        AlertDialog alertDialog = alertBuilder.create();
+//        alertDialog.show();
 
-        alertBuilder.setTitle("** 게임 설명 **");
-        alertBuilder.setMessage("이미지를 클릭하면 원하는 이미지로 바꿀 수 있습니다.\n\nSTART 버튼을 클릭하면 게임을 시작할 수 있습니다. ");
-        alertBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-
-        AlertDialog alertDialog = alertBuilder.create();
-        alertDialog.show();
+        CustomDialog f = new CustomDialog ();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(f,"custom_dialog");
+        ft.commit();
     }
     /////////////////////////////////////////
 
