@@ -427,10 +427,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        
         if(item.getItemId() == R.id.action_info) {
             showInfo();
-            // Toast.makeText(getApplicationContext(), "버튼 클릭", Toast.LENGTH_SHORT).show();
             return true;
         }
         else {
@@ -439,19 +437,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showInfo(){
-//        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-//
-//        alertBuilder.setTitle("** 게임 설명 **");
-//        alertBuilder.setMessage("이미지를 클릭하면 원하는 이미지로 바꿀 수 있습니다.\n\nSTART 버튼을 클릭하면 게임을 시작할 수 있습니다. ");
-//        alertBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//            }
-//        });
-//
-//        AlertDialog alertDialog = alertBuilder.create();
-//        alertDialog.show();
-
         CustomDialog f = new CustomDialog ();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(f,"custom_dialog");
