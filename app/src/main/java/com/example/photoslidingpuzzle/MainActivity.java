@@ -30,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     int cnt = 0; // 자기보다 큰 인덱스가 더 작은 자리에 위치해 있는 개수
 
     int width;  // 화면 가로 크기 구하기
+    int moveCnt;    // 퍼즐 이동 횟수 체크
+    boolean setImage;   // 사진을 새로 설정했는지 체크
 
 
     ActionBar actionBar;
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     Button select4by4;
     Button shuffle;
     GridView gridView;
+    TextView moveText;
 
 
     @Override
@@ -98,11 +102,13 @@ public class MainActivity extends AppCompatActivity {
         select4by4 = (Button) findViewById(R.id.button2);
         shuffle = (Button) findViewById(R.id.shuffle);
         gridView = (GridView) findViewById(R.id.GridView);
+        moveText = (TextView) findViewById(R.id.textView);
 
         // 기본 이미지 보드 설정
-        selectImage = BitmapFactory.decodeResource(getResources(), R.drawable.image);
+        selectImage = BitmapFactory.decodeResource(getResources(), R.drawable.sample1);
         resizeImage();
         setImage(3);
+        setImage = false;
 
         // 이미지 선택
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +132,11 @@ public class MainActivity extends AppCompatActivity {
         select3by3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                if(!setImage) {
+                    selectImage = BitmapFactory.decodeResource(getResources(), R.drawable.sample1);
+                    resizeImage();
+                    imageView.setImageBitmap(selectImage);
+                }
                 setImage(3);
             }
         });
@@ -134,6 +145,11 @@ public class MainActivity extends AppCompatActivity {
         select4by4.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                if(!setImage) {
+                    selectImage = BitmapFactory.decodeResource(getResources(), R.drawable.sample2);
+                    resizeImage();
+                    imageView.setImageBitmap(selectImage);
+                }
                 setImage(4);
             }
         });
@@ -145,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 click = true; // shuffle을 눌렀음을 표시
                 answer = false;
                 cnt = 0;
+                moveCnt = 0;    // 이동횟수 0으로 초기화
                 int length = num * num ;
                 int lastNum = length - 1;
                 
@@ -177,8 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     if(cnt % 2 == 0)
                         break;
                 }
-
-
+                moveText.setText("이동 횟수: " + moveCnt);
                 gridView.setAdapter(adapter);
                 gridView.setNumColumns(num);
             }
@@ -210,21 +226,25 @@ public class MainActivity extends AppCompatActivity {
                     // 퍼즐 초기값은 3*3
                     if(y - 1 >= 0 && shufflePiece[board[y-1][x]].getIndex() == blank){
                         swapPiece(clickLocation, board[y-1][x]);
+                        moveCnt++;
                         checkAnswer();
                     }
                     // 아래쪽이 빈칸인 경우
                     else if(y + 1 < num  && shufflePiece[board[y+1][x]].getIndex() == blank) {
                         swapPiece(clickLocation, board[y+1][x]);
+                        moveCnt++;
                         checkAnswer();
                     }
                     // 오른쪽이 빈칸인 경우
                     else if(x + 1 < num && shufflePiece[board[y][x+1]].getIndex() == blank){
                         swapPiece(clickLocation, board[y][x+1]);
+                        moveCnt++;
                         checkAnswer();
                     }
                     // 왼쪽이 빈칸인 경우
                     else if(x - 1 >= 0 && shufflePiece[board[y][x-1]].getIndex() == blank){
                         swapPiece(clickLocation, board[y][x-1]);
+                        moveCnt++;
                         checkAnswer();
                     }
                     // 주변에 빈칸이 없는 공간을 클릭했을 경우는 동작 안함
@@ -234,9 +254,12 @@ public class MainActivity extends AppCompatActivity {
                     gridView.setAdapter(adapter);
                     gridView.setNumColumns(num);
 
+                    // 이동한 횟수 증가 후 update
+                    moveText.setText("이동 횟수: " + moveCnt);
+
                     // 정답이라면 Toast메시지 출력후, 더 이상 클릭 불가!
                     if(answer)
-                        Toast.makeText(getApplicationContext(), "FINISH!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "성공!", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -269,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 보드판 update
     protected void setImage(int puzzleNum){
+        moveCnt = 0;
         num = puzzleNum;
         loc = 0;
         click = false;
@@ -290,6 +314,8 @@ public class MainActivity extends AppCompatActivity {
         PuzzleAdapter adapter = new PuzzleAdapter(getApplicationContext(), selectImage, num, puzzlePiece);
         gridView.setAdapter(adapter);
         gridView.setNumColumns(num);
+
+        moveText.setText("");
     }
 
     @Override
@@ -312,6 +338,7 @@ public class MainActivity extends AppCompatActivity {
                 selectImage = null;
                 try {
                     selectImage = MediaStore.Images.Media.getBitmap(getContentResolver(),result.getUri());
+                    setImage = true;
                     resizeImage();
                     setImage(3);
                     Toast.makeText(this, "Select!", Toast.LENGTH_SHORT).show();
@@ -415,7 +442,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
 
         alertBuilder.setTitle("** 게임 설명 **");
-        alertBuilder.setMessage("이미지를 클릭하면 원하는 이미지로 바꿀 수 있습니다.\n\nSHUFFLE 버튼을 클릭하면 게임을 시작할 수 있습니다. ");
+        alertBuilder.setMessage("이미지를 클릭하면 원하는 이미지로 바꿀 수 있습니다.\n\nSTART 버튼을 클릭하면 게임을 시작할 수 있습니다. ");
         alertBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

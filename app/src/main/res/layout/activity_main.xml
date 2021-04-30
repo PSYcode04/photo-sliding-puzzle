@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
-            app:srcCompat="@drawable/image" />
+            app:srcCompat="@drawable/sample1" />
     </LinearLayout>
 
     <LinearLayout
@@ -58,12 +58,24 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"/>
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+
         <Button
             android:id="@+id/shuffle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="shuffle" />
+            android:text="start" />
+
+
     </LinearLayout>
 
 </LinearLayout>
