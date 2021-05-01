@@ -1,4 +1,4 @@
-package com.example.photoslidingpuzzle;
+package com.slidingpuzzle.photoslidingpuzzle;
 
 import org.junit.Test;
 

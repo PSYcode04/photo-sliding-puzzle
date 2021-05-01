@@ -1,4 +1,4 @@
-package com.example.photoslidingpuzzle;
+package com.slidingpuzzle.photoslidingpuzzle;
 
 import android.os.Handler;
 import android.os.Message;

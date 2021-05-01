@@ -1,4 +1,4 @@
-package com.example.photoslidingpuzzle;
+package com.slidingpuzzle.photoslidingpuzzle;
 
 import android.content.Context;
 import android.graphics.Bitmap;
