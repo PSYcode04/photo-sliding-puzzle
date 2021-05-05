@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getRealSize(size); // or getSize(size)
-        width = size.x - 70; // 디스플레이 가로 크기에서 50(pixel) 빼기
+        width = size.x - 70; // 디스플레이 가로 크기에서 일정 크기
 
         actionBar = getSupportActionBar();
         imageView = (ImageView) findViewById(R.id.originalImage);

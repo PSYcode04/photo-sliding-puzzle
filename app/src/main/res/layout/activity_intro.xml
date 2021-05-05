@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="version 1.0"
+            android:text="version 1.1"
             android:textColor="#808080"
             android:textSize="20sp"
             android:layout_marginTop="20dp"/>
